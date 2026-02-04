@@ -8,6 +8,8 @@ printf '%s' "$OUT" | python3 -c 'import json,sys,re
 try:
     data=json.load(sys.stdin)
     tip=data.get("tooltip", "")
+    tip=tip.replace("\\n", "\n")
+    tip=tip.replace("\\r", "")
     # strip pango spans for terminal readability
     tip=re.sub(r"<span[^>]*>", "", tip)
     tip=tip.replace("</span>", "")
