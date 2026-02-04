@@ -77,7 +77,7 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 - `scripts/codex-quota.py`
 - `scripts/antigravity-waybar-usage-login`
 - `scripts/antigravity-waybar-usage-fetch`
-- `scripts/llm-usage-menu`
+- `scripts/llm-usage-menu` (right-click menu with install/login actions)
 - `snippets/waybar-config.jsonc`
 - `snippets/waybar-style.css`
 - `docs/AGENTS_GUIDE.md` (for agents)

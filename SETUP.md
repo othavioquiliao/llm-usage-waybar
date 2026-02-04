@@ -48,7 +48,7 @@ Open `~/.config/waybar/config.jsonc` and add:
   "return-type": "json",
   "interval": 60,
   "markup": "pango",
-  "on-click-right": "$HOME/.config/waybar/scripts/llm-usage-menu"
+  "on-click-right": "$HOME/.config/waybar/scripts/llm-usage-menu" // includes install/login options
 }
 ```
 
