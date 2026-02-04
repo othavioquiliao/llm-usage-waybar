@@ -29,7 +29,7 @@ ensure_pkg() {
 }
 
 login_antigravity() {
-  ensure_pkg antigravity antigravity
+  ensure_pkg antigravity aur/antigravity
   ensure_bun
   if ! command -v antigravity-usage >/dev/null 2>&1; then
     echo "Installing antigravity-usage..."
@@ -39,12 +39,16 @@ login_antigravity() {
 }
 
 login_claude() {
-  ensure_pkg claude claude-code
+  ensure_pkg claude aur/claude-code
   claude
 }
 
 login_codex() {
-  ensure_pkg codex codex
+  ensure_bun
+  if ! command -v codex >/dev/null 2>&1; then
+    echo "Installing @openai/codex..."
+    bun i -g @openai/codex
+  fi
   codex
 }
 
@@ -60,7 +64,7 @@ choice=$(echo "$OPTIONS" | $MENU_BIN --dmenu --width 280 --minheight 1 --maxheig
 
 case "$choice" in
   "Show Details")
-    omarchy-launch-floating-terminal-with-presentation "bash -lc '$SCRIPT_DIR/waybar-llm-usage.sh; echo; read -p \"Press Enter...\"'" ;;
+    omarchy-launch-floating-terminal-with-presentation "bash -lc '$SCRIPT_DIR/waybar-llm-usage.sh | jq -r .tooltip; echo; read -p \"Press Enter...\"'" ;;
   "Claude Login")
     omarchy-launch-floating-terminal-with-presentation "bash -lc '$(declare -f ensure_bun); $(declare -f ensure_pkg); $(declare -f login_claude); login_claude'" ;;
   "Codex Login")
