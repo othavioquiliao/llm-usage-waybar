@@ -209,12 +209,18 @@ if [ "$AG_ACCOUNT" = "?" ]; then
     AG_CLAUDE=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Claude"; "i")) | .remainingPercentage // empty' | head -1)
     AG_GEM_PRO=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Gemini.*Pro"; "i")) | .remainingPercentage // empty' | head -1)
     AG_GEM_FLASH=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Gemini.*Flash"; "i")) | .remainingPercentage // empty' | head -1)
+    AG_CLAUDE_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Claude"; "i")) | .resetTime // ""' | head -1)
+    AG_GEM_PRO_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Gemini.*Pro"; "i")) | .resetTime // ""' | head -1)
+    AG_GEM_FLASH_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.models[]? | select(.label | test("Gemini.*Flash"; "i")) | .resetTime // ""' | head -1)
   elif echo "$AG_CLOUD" | jq -e '.snapshot' >/dev/null 2>&1; then
     AG_ACCOUNT=$(echo "$AG_CLOUD" | jq -r '.email // .accountEmail // "?"')
     # Map snapshot models if present
     AG_CLAUDE=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Claude"; "i")) | .remainingPercentage // empty' | head -1)
     AG_GEM_PRO=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Pro"; "i")) | .remainingPercentage // empty' | head -1)
     AG_GEM_FLASH=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Flash"; "i")) | .remainingPercentage // empty' | head -1)
+    AG_CLAUDE_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Claude"; "i")) | .resetTime // ""' | head -1)
+    AG_GEM_PRO_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Pro"; "i")) | .resetTime // ""' | head -1)
+    AG_GEM_FLASH_RESET_ISO=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Flash"; "i")) | .resetTime // ""' | head -1)
   fi
 fi
 
