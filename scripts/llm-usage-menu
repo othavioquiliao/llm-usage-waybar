@@ -64,7 +64,7 @@ choice=$(echo "$OPTIONS" | $MENU_BIN --dmenu --width 280 --minheight 1 --maxheig
 
 case "$choice" in
   "Show Details")
-    omarchy-launch-floating-terminal-with-presentation "$SCRIPT_DIR/llm-usage-details" ;;
+    "$SCRIPT_DIR/llm-usage-open-terminal" "$SCRIPT_DIR/llm-usage-details" ;;
   "Claude Login")
     omarchy-launch-floating-terminal-with-presentation "bash -lc '$(declare -f ensure_bun); $(declare -f ensure_pkg); $(declare -f login_claude); login_claude'" ;;
   "Codex Login")
