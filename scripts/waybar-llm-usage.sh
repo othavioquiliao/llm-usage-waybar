@@ -216,6 +216,8 @@ if [ "$AG_ACCOUNT" != "?" ]; then
   T+="$(line_fmt "Gemini Flash" "$AG_GEM_FLASH" "$AG_GEM_FLASH_RESET_ISO" "$AG_GEM_FLASH_RESET")"
 fi
 
+# convert literal \n to real newlines for tooltip rendering
+T=${T//\\n/$'\n'}
 TEXT_JSON=$(printf "%s" "$TEXT" | jq -Rs .)
 TIP_JSON=$(printf "%s" "$T" | jq -Rs .)
 echo "{\"text\": $TEXT_JSON, \"tooltip\": $TIP_JSON, \"class\": \"codexbar\"}"
