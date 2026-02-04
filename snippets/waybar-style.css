@@ -7,3 +7,8 @@
 #custom-llm-usage span {
   padding: 0 2px;
 }
+
+#custom-llm-usage tooltip {
+  font-family: 'MesloLGL Nerd Font Mono';
+  font-size: 12px;
+}
