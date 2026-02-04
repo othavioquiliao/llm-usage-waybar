@@ -31,6 +31,3 @@ except Exception:
     print(raw)'
 # don't let parse errors kill the terminal
 true
-
-echo
-read -p "Press Enter..." </dev/tty
