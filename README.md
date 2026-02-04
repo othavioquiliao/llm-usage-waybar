@@ -47,6 +47,7 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 
 - Antigravity IDE installed
 - Antigravity IDE running (language server must be active)
+- Optional Cloud fallback: `npm i -g antigravity-usage` + `antigravity-waybar-usage-login`
 
 ---
 
@@ -55,8 +56,12 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 1. Copy the scripts:
   - `scripts/waybar-llm-usage.sh` → `~/.config/waybar/scripts/waybar-llm-usage.sh`
   - `scripts/codex-quota.py` → `~/.config/waybar/scripts/codex-quota.py`
+  - `scripts/antigravity-waybar-usage-login` → `~/.config/waybar/scripts/antigravity-waybar-usage-login`
+  - `scripts/antigravity-waybar-usage-fetch` → `~/.config/waybar/scripts/antigravity-waybar-usage-fetch`
   - `chmod +x ~/.config/waybar/scripts/waybar-llm-usage.sh`
   - `chmod +x ~/.config/waybar/scripts/codex-quota.py`
+  - `chmod +x ~/.config/waybar/scripts/antigravity-waybar-usage-login`
+  - `chmod +x ~/.config/waybar/scripts/antigravity-waybar-usage-fetch`
 2. Add Waybar config snippet:
   - Append the block from `snippets/waybar-config.jsonc` into your `~/.config/waybar/config.jsonc`
 3. Add CSS snippet:
