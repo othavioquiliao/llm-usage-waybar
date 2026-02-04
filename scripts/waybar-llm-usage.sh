@@ -174,13 +174,6 @@ Cld=$(fmt_span "Cld" "$C5_REM")
 Cdx=$(fmt_span "Cdx" "$X5_REM")
 SEP="<span weight='bold'>·</span>"
 
-if [ "$AG_ACCOUNT" != "?" ]; then
-  AG=$(fmt_span "AG" "$AG_CLAUDE")
-  TEXT="| ${Cld} ${SEP} ${Cdx} ${SEP} ${AG} |"
-else
-  TEXT="| ${Cld} ${SEP} ${Cdx} |"
-fi
-
 # --- Tooltip ---
 line_fmt() {
   local label="$1"; local pct="$2"; local reset_iso="$3"; local reset_hm="$4"
