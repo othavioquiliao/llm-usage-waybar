@@ -4,11 +4,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 OUT=$($SCRIPT_DIR/waybar-llm-usage.sh)
-printf '%s' "$OUT" | python3 -c 'import json,sys
+printf '%s' "$OUT" | python3 -c 'import json,sys,re
 try:
     data=json.load(sys.stdin)
-    print(data.get("tooltip", ""))
-except Exception as e:
+    tip=data.get("tooltip", "")
+    # strip pango spans for terminal readability
+    tip=re.sub(r"<span[^>]*>", "", tip)
+    tip=tip.replace("</span>", "")
+    print(tip)
+except Exception:
     raw=sys.stdin.read()
     print("(failed to parse tooltip)")
     print(raw)'
