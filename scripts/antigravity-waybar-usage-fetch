@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Fetch quota via antigravity-usage (cloud mode fallback)
+# Outputs JSON snapshot for active account only
+
+if ! command -v antigravity-usage >/dev/null 2>&1; then
+  echo "{}"
+  exit 0
+fi
+
+# Prefer auto mode, but only current account
+antigravity-usage quota --json 2>/dev/null | jq 'if type=="array" then .[0] else . end' 2>/dev/null || echo "{}"

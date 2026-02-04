@@ -4,6 +4,7 @@
 export PATH="$HOME/.cache/.bun/bin:$PATH"
 export CODEX_BIN="$HOME/.cache/.bun/bin/codex"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+AG_FETCH="$SCRIPT_DIR/antigravity-waybar-usage-fetch"
 
 # --- Helpers ---
 color_for() {
@@ -53,12 +54,13 @@ human_eta() {
   if [ -z "$ts" ]; then echo "?"; return; fi
   local diff=$((ts - now))
   if [ $diff -lt 0 ]; then echo "0m"; return; fi
-  local h=$((diff / 3600))
+  local d=$((diff / 86400))
+  local h=$(((diff % 86400) / 3600))
   local m=$(((diff % 3600) / 60))
-  if [ $h -gt 0 ]; then
-    printf "%dh %dm" "$h" "$m"
+  if [ $d -gt 0 ]; then
+    printf "%dd %02dh" "$d" "$h"
   else
-    printf "%dm" "$m"
+    printf "%dh %02dm" "$h" "$m"
   fi
 }
 
@@ -82,8 +84,19 @@ if [ -f "$CLAUDE_CREDS" ]; then
       C7_REM=$((100 - C7_USED))
       C5_RESET_ISO=$(echo "$USAGE" | jq -r '.five_hour.resets_at // ""')
       C7_RESET_ISO=$(echo "$USAGE" | jq -r '.seven_day.resets_at // ""')
-      [ -n "$C5_RESET_ISO" ] && C5_RESET=$(date -d "$C5_RESET_ISO" +"%H:%M" 2>/dev/null || echo "?")
-      [ -n "$C7_RESET_ISO" ] && C7_RESET=$(date -d "$C7_RESET_ISO" +"%d/%m" 2>/dev/null || echo "?")
+      if [ -n "$C5_RESET_ISO" ] && [ "$C5_RESET_ISO" != "null" ]; then
+        C5_RESET=$(date -d "$C5_RESET_ISO" +"%H:%M" 2>/dev/null || echo "?")
+      else
+        # rolling window: assume 5h from now for UX
+        C5_RESET_ISO=$(date -d "+5 hours" -Iseconds)
+        C5_RESET=$(date -d "$C5_RESET_ISO" +"%H:%M" 2>/dev/null || echo "?")
+      fi
+      if [ -n "$C7_RESET_ISO" ] && [ "$C7_RESET_ISO" != "null" ]; then
+        C7_RESET=$(date -d "$C7_RESET_ISO" +"%d/%m" 2>/dev/null || echo "?")
+      else
+        C7_RESET="?"
+        C7_RESET_ISO=""
+      fi
     fi
   fi
 fi
@@ -173,6 +186,18 @@ T+="$(line_fmt "Weekly" "$C7_REM" "$C7_RESET_ISO" "$C7_RESET")\\n"
 T+="\\n━━━ Codex ━━━\\n"
 T+="$(line_fmt "Codex 5h" "$X5_REM" "$X5_RESET_ISO" "$X5_RESET")\\n"
 T+="$(line_fmt "Codex 7d" "$X7_REM" "$X7_RESET_ISO" "$X7_RESET")\\n"
+
+# Fallback to cloud if local failed
+if [ "$AG_ACCOUNT" = "?" ]; then
+  AG_CLOUD=$($AG_FETCH 2>/dev/null)
+  if echo "$AG_CLOUD" | jq -e '.snapshot' >/dev/null 2>&1; then
+    AG_ACCOUNT=$(echo "$AG_CLOUD" | jq -r '.email // .accountEmail // "?"')
+    # Map snapshot models if present
+    AG_CLAUDE=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Claude"; "i")) | .remainingPercentage // empty' | head -1)
+    AG_GEM_PRO=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Pro"; "i")) | .remainingPercentage // empty' | head -1)
+    AG_GEM_FLASH=$(echo "$AG_CLOUD" | jq -r '.snapshot.models[]? | select(.label | test("Gemini.*Flash"; "i")) | .remainingPercentage // empty' | head -1)
+  fi
+fi
 
 if [ "$AG_ACCOUNT" != "?" ]; then
   T+="\\n━━━ Antigravity (${AG_ACCOUNT}) ━━━\\n"

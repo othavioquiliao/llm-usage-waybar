@@ -10,12 +10,12 @@
 
 ---
 
-## Claude shows 0%
-**Cause:** 5h usage is fully consumed.
+## Claude shows 0% or reset shows "rolling"
+**Cause:** The 5h window is rolling and starts when usage occurs. When idle, Anthropic returns `resets_at = null`.
 
 **Fix:**
-- Check weekly line (7d)
-- Wait for reset time shown
+- This is expected. It will show a fixed reset time after the next usage event.
+- Check weekly line (7d) for a stable reset date.
 
 ---
 

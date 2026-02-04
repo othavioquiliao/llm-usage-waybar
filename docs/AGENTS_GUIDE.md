@@ -21,6 +21,7 @@ Use `docs/PREREQS.md`. Confirm:
 - `codex` CLI logged in
 - Antigravity IDE running
 - `jq`, `curl`, `lsof`, `python3` installed
+- Optional: antigravity-usage installed + login for cloud fallback
 
 ---
 
@@ -28,8 +29,12 @@ Use `docs/PREREQS.md`. Confirm:
 Copy:
 - `scripts/waybar-llm-usage.sh` → `~/.config/waybar/scripts/waybar-llm-usage.sh`
 - `scripts/codex-quota.py` → `~/.config/waybar/scripts/codex-quota.py`
+- `scripts/antigravity-waybar-usage-login` → `~/.config/waybar/scripts/antigravity-waybar-usage-login`
+- `scripts/antigravity-waybar-usage-fetch` → `~/.config/waybar/scripts/antigravity-waybar-usage-fetch`
 - `chmod +x ~/.config/waybar/scripts/waybar-llm-usage.sh`
 - `chmod +x ~/.config/waybar/scripts/codex-quota.py`
+- `chmod +x ~/.config/waybar/scripts/antigravity-waybar-usage-login`
+- `chmod +x ~/.config/waybar/scripts/antigravity-waybar-usage-fetch`
 
 ---
 

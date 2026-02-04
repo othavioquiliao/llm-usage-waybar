@@ -19,6 +19,7 @@
 ## Antigravity
 - Antigravity IDE installed
 - Antigravity IDE **running** (language server active)
+- Optional Cloud fallback: `npm i -g antigravity-usage` + `antigravity-waybar-usage-login`
 
 ## Optional (Quality)
 - Catppuccin theme installed (for visual consistency)

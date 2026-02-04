@@ -2,7 +2,7 @@
 
 This repo documents how to reproduce the Waybar module that shows **Claude Code**, **Codex**, and **Antigravity** quotas in Omarchy/Waybar.
 
-**Scope:** Documentation + scripts only. No auto-installer.
+**Scope:** Documentation + scripts only
 
 ---
 
@@ -25,6 +25,7 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 **System:** Linux + Waybar (Omarchy or similar)
 
 ### Core dependencies
+
 - `bash`
 - `jq`
 - `curl`
@@ -32,15 +33,18 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 - `lsof`
 
 ### Claude Code
+
 - `claude` CLI installed
 - Logged in (OAuth tokens in `~/.claude/.credentials.json`)
 
 ### Codex CLI
+
 - `codex` CLI installed
 - Logged in (ChatGPT OAuth or API key)
 - CLI binary available (example path: `~/.cache/.bun/bin/codex`)
 
 ### Antigravity
+
 - Antigravity IDE installed
 - Antigravity IDE running (language server must be active)
 
@@ -49,25 +53,23 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 ## Quick Start (Human)
 
 1. Copy the scripts:
-   - `scripts/waybar-llm-usage.sh` → `~/.config/waybar/scripts/waybar-llm-usage.sh`
-   - `scripts/codex-quota.py` → `~/.config/waybar/scripts/codex-quota.py`
-   - `chmod +x ~/.config/waybar/scripts/waybar-llm-usage.sh`
-   - `chmod +x ~/.config/waybar/scripts/codex-quota.py`
-
+  - `scripts/waybar-llm-usage.sh` → `~/.config/waybar/scripts/waybar-llm-usage.sh`
+  - `scripts/codex-quota.py` → `~/.config/waybar/scripts/codex-quota.py`
+  - `chmod +x ~/.config/waybar/scripts/waybar-llm-usage.sh`
+  - `chmod +x ~/.config/waybar/scripts/codex-quota.py`
 2. Add Waybar config snippet:
-   - Append the block from `snippets/waybar-config.jsonc` into your `~/.config/waybar/config.jsonc`
-
+  - Append the block from `snippets/waybar-config.jsonc` into your `~/.config/waybar/config.jsonc`
 3. Add CSS snippet:
-   - Append the block from `snippets/waybar-style.css` into `~/.config/waybar/style.css`
-
+  - Append the block from `snippets/waybar-style.css` into `~/.config/waybar/style.css`
 4. Reload Waybar:
-   - `pkill -USR2 waybar`
+  - `pkill -USR2 waybar`
 
 ---
 
 ## Troubleshooting
 
 ### Codex stays at 99–100%
+
 - The script uses `codex-quota.py --fresh` and caches for 2 minutes.
 - If it looks stuck:
   - Run `codex` in a terminal and issue `/status` once.
@@ -75,31 +77,12 @@ This repo documents how to reproduce the Waybar module that shows **Claude Code*
 - Ensure `CODEX_BIN` points to your `codex` binary.
 
 ### Claude shows 0%
+
 - This is correct when 5h usage is fully consumed.
 - The 7d line still shows weekly remaining.
 
 ### Antigravity shows ?
+
 - Ensure the Antigravity IDE is running.
 - The script probes the local LSP; it won’t work if the IDE is closed.
 
----
-
-## Files
-
-- `scripts/waybar-llm-usage.sh`
-- `scripts/codex-quota.py`
-- `snippets/waybar-config.jsonc`
-- `snippets/waybar-style.css`
-- `docs/AGENTS_GUIDE.md` (for agents)
-- `docs/PREREQS.md`
-- `docs/TROUBLESHOOTING.md`
-- `SETUP.md`
-
----
-
-## Notes
-
-This setup avoids CodexBar web sources and uses **local-only** methods:
-- Claude: OAuth API
-- Codex: CLI logs via `codex-quota.py`
-- Antigravity: local language server (LSP)
