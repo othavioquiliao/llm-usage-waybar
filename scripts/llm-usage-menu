@@ -47,11 +47,13 @@ login_antigravity() {
     bun i -g antigravity-usage
   fi
   "$SCRIPT_DIR/antigravity-waybar-usage-login"
+  pkill -USR2 waybar || true
 }
 
 login_claude() {
   ensure_pkg claude aur/claude-code
   claude
+  pkill -USR2 waybar || true
 }
 
 login_codex() {
@@ -61,6 +63,7 @@ login_codex() {
     bun i -g @openai/codex
   fi
   codex
+  pkill -USR2 waybar || true
 }
 
 OPTIONS=$(cat <<'EOF'
