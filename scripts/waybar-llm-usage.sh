@@ -243,6 +243,14 @@ if [ "$AG_ACCOUNT" != "?" ]; then
   T+="$(line_fmt "Gemini Flash" "$AG_GEM_FLASH" "$AG_GEM_FLASH_RESET_ISO" "$AG_GEM_FLASH_RESET")"
 fi
 
+# finalize bar text after AG cloud fallback
+if [ "$AG_ACCOUNT" != "?" ]; then
+  AG=$(fmt_span "AG" "$AG_CLAUDE")
+  TEXT="| ${Cld} ${SEP} ${Cdx} ${SEP} ${AG} |"
+else
+  TEXT="| ${Cld} ${SEP} ${Cdx} |"
+fi
+
 # convert literal \n to real newlines for tooltip rendering
 T=${T//\\n/$'\n'}
 TEXT_JSON=$(printf "%s" "$TEXT" | jq -Rs .)
