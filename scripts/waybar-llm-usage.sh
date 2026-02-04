@@ -38,9 +38,13 @@ bar_5pct() {
   local empty=$((20 - filled))
   local color
   color=$(color_for "$pct")
-  local filled_str empty_str
-  filled_str=$(printf "%0.s█" $(seq 1 $filled))
-  empty_str=$(printf "%0.s░" $(seq 1 $empty))
+  local filled_str="" empty_str=""
+  if [ "$filled" -gt 0 ]; then
+    filled_str=$(printf "%0.s█" $(seq 1 $filled))
+  fi
+  if [ "$empty" -gt 0 ]; then
+    empty_str=$(printf "%0.s░" $(seq 1 $empty))
+  fi
   echo "<span foreground='${color}'>${filled_str}</span><span foreground='#6c7086'>${empty_str}</span>"
 }
 
