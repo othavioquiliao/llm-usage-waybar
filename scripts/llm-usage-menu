@@ -81,7 +81,7 @@ case "$choice" in
   "Codex Login")
     "$SCRIPT_DIR/llm-usage-open-terminal" "bash -lc '$(declare -f ensure_pkg); $(declare -f login_codex); login_codex'" ;;
   "Antigravity Login")
-    "$SCRIPT_DIR/llm-usage-open-terminal" "bash -lc '$(declare -f ensure_bun); $(declare -f ensure_pkg); $(declare -f login_antigravity); login_antigravity'" ;;
+    "$SCRIPT_DIR/llm-usage-open-terminal" "sh -lc 'SCRIPT_DIR=\"$SCRIPT_DIR\"; $(declare -f ensure_bun); $(declare -f ensure_pkg); $(declare -f login_antigravity); login_antigravity'" ;;
   *)
     exit 0 ;;
 esac
