@@ -52,12 +52,17 @@ login_antigravity() {
 
 login_claude() {
   ensure_pkg claude aur/claude-code
-  claude
+  if [ ! -f "$HOME/.claude/.credentials.json" ]; then
+    claude setup-token
+  else
+    claude
+  fi
   pkill -USR2 waybar || true
 }
 
 login_codex() {
   ensure_bun
+  export PATH="$HOME/.cache/.bun/bin:$PATH"
   if ! command -v codex >/dev/null 2>&1; then
     echo "Installing @openai/codex..."
     bun i -g @openai/codex
