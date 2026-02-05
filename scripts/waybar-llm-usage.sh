@@ -122,7 +122,7 @@ if [ ! -f "$CODEX_CACHE" ] || [ $(( $(date +%s) - $(stat -c %Y "$CODEX_CACHE" 2>
   fi
 fi
 
-if [ -f "$CODEX_CACHE" ]; then
+if [ -f "$HOME/.codex/auth.json" ] && [ -f "$CODEX_CACHE" ]; then
   CODEX_JSON=$(cat "$CODEX_CACHE")
 fi
 

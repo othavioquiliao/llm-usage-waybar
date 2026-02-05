@@ -52,9 +52,16 @@ login_antigravity() {
 
 login_claude() {
   ensure_pkg claude aur/claude-code
-  echo "Use /login e escolha a opção 1 (assinatura)."
+  echo -e "\n\e[1;32mClaude Login\e[0m"
+  echo -e "\e[36m1) Confirme a pasta (trust)\e[0m"
+  echo -e "\e[36m2) Digite /login e escolha a opção 1\e[0m"
+  echo ""
+  read -p "Pressione Enter para continuar..." </dev/tty
+
+  # watch for new credentials and refresh Waybar
+  (while [ ! -f "$HOME/.claude/.credentials.json" ]; do sleep 1; done; pkill -USR2 waybar || true) &
+
   claude
-  pkill -USR2 waybar || true
 }
 
 login_codex() {
