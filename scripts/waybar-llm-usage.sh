@@ -244,11 +244,31 @@ if [ "$AG_ACCOUNT" != "?" ]; then
 fi
 
 # finalize bar text after AG cloud fallback
-if [ "$AG_ACCOUNT" != "?" ]; then
+HAS_CLAUDE=""
+HAS_CODEX=""
+HAS_AG=""
+[ "$C5_REM" != "?" ] && HAS_CLAUDE=1
+[ "$X5_REM" != "?" ] && HAS_CODEX=1
+[ "$AG_ACCOUNT" != "?" ] && HAS_AG=1
+
+TEXT=""
+if [ -n "$HAS_CLAUDE" ]; then
+  TEXT="$Cld"
+fi
+if [ -n "$HAS_CODEX" ]; then
+  if [ -n "$TEXT" ]; then TEXT+=" ${SEP} "; fi
+  TEXT+="$Cdx"
+fi
+if [ -n "$HAS_AG" ]; then
   AG=$(fmt_span "AG" "$AG_CLAUDE")
-  TEXT="| ${Cld} ${SEP} ${Cdx} ${SEP} ${AG} |"
+  if [ -n "$TEXT" ]; then TEXT+=" ${SEP} "; fi
+  TEXT+="$AG"
+fi
+
+if [ -n "$TEXT" ]; then
+  TEXT="| ${TEXT} |"
 else
-  TEXT="| ${Cld} ${SEP} ${Cdx} |"
+  TEXT="| <span foreground='#cdd6f4'>Connect to Provider</span> |"
 fi
 
 # convert literal \n to real newlines for tooltip rendering
