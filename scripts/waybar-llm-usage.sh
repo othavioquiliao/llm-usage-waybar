@@ -183,16 +183,23 @@ line_fmt() {
   printf "%-14.14s %s - %3s%% - %-7s (%s)" "$label" "$bar" "$pct" "$eta" "$reset_hm"
 }
 
-T="━━━ Claude (${C_PLAN}) ━━━\\n"
-if [ "$C_PLAN" = "token expired" ]; then
-  T+="⚠️ Token expirou. Faça login no Claude CLI.\\n"
-fi
-T+="$(line_fmt "Claude 4.5 Opus" "$C5_REM" "$C5_RESET_ISO" "$C5_RESET")\\n"
-T+="$(line_fmt "Weekly" "$C7_REM" "$C7_RESET_ISO" "$C7_RESET")\\n"
+T=""
 
-T+="\\n━━━ Codex ━━━\\n"
-T+="$(line_fmt "Codex 5h" "$X5_REM" "$X5_RESET_ISO" "$X5_RESET")\\n"
-T+="$(line_fmt "Codex 7d" "$X7_REM" "$X7_RESET_ISO" "$X7_RESET")\\n"
+if [ "$C5_REM" != "?" ] || [ "$C7_REM" != "?" ]; then
+  T+="━━━ Claude (${C_PLAN}) ━━━\\n"
+  if [ "$C_PLAN" = "token expired" ]; then
+    T+="⚠️ Token expirou. Faça login no Claude CLI.\\n"
+  fi
+  T+="$(line_fmt "Claude 4.5 Opus" "$C5_REM" "$C5_RESET_ISO" "$C5_RESET")\\n"
+  T+="$(line_fmt "Weekly" "$C7_REM" "$C7_RESET_ISO" "$C7_RESET")\\n"
+fi
+
+if [ "$X5_REM" != "?" ] || [ "$X7_REM" != "?" ]; then
+  if [ -n "$T" ]; then T+="\\n"; fi
+  T+="━━━ Codex ━━━\\n"
+  T+="$(line_fmt "Codex 5h" "$X5_REM" "$X5_RESET_ISO" "$X5_RESET")\\n"
+  T+="$(line_fmt "Codex 7d" "$X7_REM" "$X7_RESET_ISO" "$X7_RESET")\\n"
+fi
 
 # Fallback to cloud if local failed
 if [ "$AG_ACCOUNT" = "?" ]; then
