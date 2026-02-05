@@ -16,6 +16,16 @@ Waybar module that shows **Claude Code**, **Codex**, and **Antigravity** quotas 
 
 ---
 
+## Portuguese (PT‑BR)
+
+- Manual: `docs/pt-br/SETUP_MANUAL.md`
+- Symlink: `docs/pt-br/SETUP_SYMLINK.md`
+- Prereqs: `docs/pt-br/PREREQS.md`
+- Troubleshooting: `docs/pt-br/TROUBLESHOOTING.md`
+- Agents: `docs/pt-br/AGENTS_GUIDE.md`
+
+---
+
 ## Prerequisites
 
 See: `docs/PREREQS.md`
