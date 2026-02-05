@@ -28,9 +28,8 @@ expect {
     exp_continue
   }
   -re "Select login method" {
-    send "1\r"
-    exp_continue
+    # hand control to user for final selection
+    interact
   }
-  eof
 }
 EOF
