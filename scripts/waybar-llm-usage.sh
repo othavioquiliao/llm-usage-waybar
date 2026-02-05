@@ -127,14 +127,20 @@ if [ -f "$CODEX_CACHE" ]; then
 fi
 
 if [ -n "$CODEX_JSON" ]; then
-  P_USED=$(echo "$CODEX_JSON" | jq -r '.primary.used_percent // 0' 2>/dev/null | xargs printf "%.0f")
-  S_USED=$(echo "$CODEX_JSON" | jq -r '.secondary.used_percent // 0' 2>/dev/null | xargs printf "%.0f")
-  X5_REM=$((100 - P_USED))
-  X7_REM=$((100 - S_USED))
-  X5_RESET_ISO=$(echo "$CODEX_JSON" | jq -r '.primary.resets_at // ""' 2>/dev/null)
-  X7_RESET_ISO=$(echo "$CODEX_JSON" | jq -r '.secondary.resets_at // ""' 2>/dev/null)
-  [ -n "$X5_RESET_ISO" ] && X5_RESET=$(date -d "$X5_RESET_ISO" +"%H:%M" 2>/dev/null || echo "?")
-  [ -n "$X7_RESET_ISO" ] && X7_RESET=$(date -d "$X7_RESET_ISO" +"%d/%m" 2>/dev/null || echo "?")
+  HAS_PRIMARY=$(echo "$CODEX_JSON" | jq -r 'has("primary")')
+  HAS_SECONDARY=$(echo "$CODEX_JSON" | jq -r 'has("secondary")')
+  if [ "$HAS_PRIMARY" = "true" ] && [ "$HAS_SECONDARY" = "true" ]; then
+    P_USED=$(echo "$CODEX_JSON" | jq -r '.primary.used_percent // 0' 2>/dev/null | xargs printf "%.0f")
+    S_USED=$(echo "$CODEX_JSON" | jq -r '.secondary.used_percent // 0' 2>/dev/null | xargs printf "%.0f")
+    X5_REM=$((100 - P_USED))
+    X7_REM=$((100 - S_USED))
+    X5_RESET_ISO=$(echo "$CODEX_JSON" | jq -r '.primary.resets_at // ""' 2>/dev/null)
+    X7_RESET_ISO=$(echo "$CODEX_JSON" | jq -r '.secondary.resets_at // ""' 2>/dev/null)
+    [ -n "$X5_RESET_ISO" ] && X5_RESET=$(date -d "$X5_RESET_ISO" +"%H:%M" 2>/dev/null || echo "?")
+    [ -n "$X7_RESET_ISO" ] && X7_RESET=$(date -d "$X7_RESET_ISO" +"%d/%m" 2>/dev/null || echo "?")
+  else
+    X5_REM="?"; X7_REM="?"; X5_RESET="?"; X7_RESET="?"; X5_RESET_ISO=""; X7_RESET_ISO=""
+  fi
 fi
 
 # --- Antigravity (LSP) ---
