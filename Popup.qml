@@ -197,7 +197,8 @@ KeyboardPanel {
       root.rebuildFocusTargets()
   })
   onAgentServiceChanged: Qt.callLater(function () {
-    root.rebuildFocusTargets()
+    if (typeof root.rebuildFocusTargets === "function")
+      root.rebuildFocusTargets()
   })
 
   PanelKeyCatcher {
@@ -333,7 +334,10 @@ KeyboardPanel {
                 if (kind === "restart_shell" && root.agentService)
                   root.agentService.restartShell()
               }
-              onVisibleChanged: Qt.callLater(root.rebuildFocusTargets)
+              onVisibleChanged: Qt.callLater(function () {
+                if (typeof root.rebuildFocusTargets === "function")
+                  root.rebuildFocusTargets()
+              })
             }
 
             Loader {
