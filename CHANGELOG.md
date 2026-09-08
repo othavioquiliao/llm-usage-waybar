@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- fix: resolve the plugin's own install directory via the QML engine's
+  file resolution instead of `manifest.__sourceDir` — Quattro's
+  `publicPluginManifest()` strips that field for every third-party plugin
+  before injection, so the helper path was always empty, the version
+  probe never ran, and every provider chip was stuck on the loading
+  placeholder (`···`) forever.
 - fix: Grok no longer flips to "Sign in" after hours idle. The CLI's access
   token lives six hours and nothing renews it while the CLI is idle; sending
   it expired earned a 401 that read as a real rejection and discarded the

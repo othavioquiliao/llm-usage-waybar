@@ -97,6 +97,34 @@ function isClosedProvider(providerId) {
   return !!CLOSED_PROVIDERS[String(providerId || "")]
 }
 
+// Quattro strips manifest.__sourceDir for every third-party plugin
+// (shell.publicPluginManifest deletes it before injection — only
+// manifest.__isFirstParty keeps the field). A third-party service must
+// therefore learn its own install directory from the QML engine's own
+// file-resolution instead of from the host-provided manifest: `file://`
+// is the only scheme a local plugin file resolves to, so anything else
+// (a qrc:/http(s):/relative fallback the engine could return) is not a
+// usable local path.
+function urlToLocalPath(fileUrl) {
+  var s = String(fileUrl || "")
+  if (s.indexOf("file://") !== 0)
+    return ""
+  var path = decodeURIComponent(s.slice("file://".length))
+  if (path.length > 1 && path.charAt(path.length - 1) === "/")
+    path = path.slice(0, -1)
+  return path
+}
+
+// manifest.__sourceDir (present only for first-party plugins) wins when
+// available; selfDirUrl (Qt.resolvedUrl(".") on Service.qml, always
+// available, independent of Quattro's manifest injection timing) is the
+// third-party fallback.
+function resolvePluginRoot(manifest, selfDirUrl) {
+  if (manifest && manifest.__sourceDir)
+    return String(manifest.__sourceDir)
+  return urlToLocalPath(selfDirUrl)
+}
+
 // QML property-var interop: nested arrays become array-like QVariantList where
 // Array.isArray is false but .length and numeric keys still work.
 function isArrayLike(value) {
