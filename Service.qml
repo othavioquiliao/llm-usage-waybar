@@ -17,9 +17,11 @@ Item {
   property var barWidgetRegistry: null
   property var pluginRegistry: null
 
-  readonly property string pluginRoot: manifest && manifest.__sourceDir
-      ? String(manifest.__sourceDir)
-      : ""
+  // manifest.__sourceDir only survives injection for first-party plugins;
+  // Quattro's publicPluginManifest() strips it for every third-party one
+  // (this plugin included), so the QML engine's own resolution of "." is
+  // the fallback that makes pluginRoot independent of that host contract.
+  readonly property string pluginRoot: Core.resolvePluginRoot(manifest, String(Qt.resolvedUrl(".")))
 
   // Test harness: absolute helper path. Production uses pluginRoot/bin/agent-bar.
   property string helperPath: ""
@@ -118,16 +120,11 @@ Item {
   function resolvedHelperPath() {
     if (helperPath && helperPath.length > 0)
       return helperPath
-    // Prefer live manifest.__sourceDir over pluginRoot: Quattro sets `manifest`
-    // after createObject, and onManifestChanged can run before the pluginRoot
-    // binding re-evaluates (nested JS field access is not a QML property).
-    var root = ""
-    if (manifest && manifest.__sourceDir)
-      root = String(manifest.__sourceDir)
-    else if (pluginRoot && pluginRoot.length > 0)
-      root = pluginRoot
-    if (root && root.length > 0)
-      return root + "/bin/agent-bar"
+    // pluginRoot binds directly on the `manifest` property (not a nested
+    // field captured once), so it is already current by the time
+    // onManifestChanged fires — no need to re-derive it here.
+    if (pluginRoot && pluginRoot.length > 0)
+      return pluginRoot + "/bin/agent-bar"
     return ""
   }
 

@@ -225,6 +225,42 @@ TestCase {
     compare(h.collectionStarted, true)
   }
 
+  // Quattro's shell.publicPluginManifest() deletes manifest.__sourceDir
+  // for every third-party plugin before injection (only
+  // manifest.__isFirstParty keeps it) — reproduced with the exact live
+  // shape Quattro hands this service (bundle.json / manifest.json fields,
+  // no __sourceDir). Without a fallback, pluginRoot goes permanently
+  // empty and the bar never leaves the loading placeholder for any
+  // provider (PROD-live-stuck-loading, 2026-09-08).
+  function test_resolve_plugin_root_falls_back_when_sourceDir_stripped() {
+    var thirdPartyManifest = {
+      schemaVersion: 1, id: "othavi0.agent-bar", name: "Agent Bar",
+      version: "10.3.11", kinds: ["service", "bar-widget"],
+      entryPoints: { service: "Service.qml", barWidget: "BarWidget.qml" }
+    }
+    compare(Core.resolvePluginRoot(thirdPartyManifest, "file:///home/u/.config/omarchy/plugins/othavi0.agent-bar/"),
+        "/home/u/.config/omarchy/plugins/othavi0.agent-bar")
+  }
+
+  function test_resolve_plugin_root_prefers_sourceDir_when_present() {
+    var firstPartyManifest = { id: "omarchy.example", __sourceDir: "/usr/share/omarchy/plugins/omarchy.example", __isFirstParty: true }
+    compare(Core.resolvePluginRoot(firstPartyManifest, "file:///should/not/be/used"),
+        "/usr/share/omarchy/plugins/omarchy.example")
+  }
+
+  function test_resolve_plugin_root_empty_without_local_file_url() {
+    compare(Core.resolvePluginRoot(null, "file:///a/b"), "/a/b")
+    compare(Core.resolvePluginRoot({}, ""), "")
+    compare(Core.resolvePluginRoot({}, "https://example.com/x"), "")
+  }
+
+  function test_url_to_local_path_decodes_and_trims_trailing_slash() {
+    compare(Core.urlToLocalPath("file:///home/a%20b/plugins/x/"), "/home/a b/plugins/x")
+    compare(Core.urlToLocalPath("file:///a/b"), "/a/b")
+    compare(Core.urlToLocalPath("not-a-url"), "")
+    compare(Core.urlToLocalPath(""), "")
+  }
+
   function test_refresh_closed_providers() {
     reset()
     h.applyVersion("10.0.0\n")
@@ -523,7 +559,11 @@ TestCase {
     verify(src.indexOf("onManifestChanged") >= 0)
     verify(src.indexOf("onHelperPathChanged") >= 0)
     verify(src.indexOf("tryStartProduction()") >= 0)
-    verify(src.indexOf("manifest.__sourceDir") >= 0)
+    // pluginRoot must resolve from the QML engine's own file location
+    // (Core.resolvePluginRoot / Qt.resolvedUrl), not solely from
+    // manifest.__sourceDir — Quattro strips that field for every
+    // third-party plugin, this one included.
+    verify(src.indexOf("Core.resolvePluginRoot(manifest, String(Qt.resolvedUrl(\".\")))") >= 0)
     // Empty helper path must wait, not finishVersionProbeFailure.
     var emptyBranch = src.indexOf("if (!helper.length)")
     verify(emptyBranch >= 0)
