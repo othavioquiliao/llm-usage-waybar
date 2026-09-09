@@ -462,10 +462,52 @@ TestCase {
   // Antigravity's five-hour bucket is the same kind of window under its own id.
   function test_gemini_5h_window_leads_like_session() {
     var layout = layoutOf([
-      { id: "gemini-weekly", label: "Weekly (7d)", usedPercent: 40, remainingPercent: 60,
+      { id: "gemini-weekly", label: "Gemini · Weekly (7d)", usedPercent: 40, remainingPercent: 60,
         resetsAt: "2026-09-05T12:00:00Z" },
-      { id: "gemini-5h", label: "Session (5h)", usedPercent: 12, remainingPercent: 88,
+      { id: "gemini-5h", label: "Gemini · Session (5h)", usedPercent: 12, remainingPercent: 88,
         resetsAt: null }
+    ], "2026-09-04T11:00:00Z")
+    compare(layout.lead.id, "gemini-5h")
+  }
+
+  function test_antigravity_3p_5h_leads_when_more_constrained() {
+    var layout = layoutOf([
+      { id: "gemini-weekly", label: "Gemini · Weekly (7d)", usedPercent: 20, remainingPercent: 80,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "gemini-5h", label: "Gemini · Session (5h)", usedPercent: 25, remainingPercent: 75,
+        resetsAt: "2026-09-04T16:00:00Z" },
+      { id: "3p-weekly", label: "Claude/GPT · Weekly (7d)", usedPercent: 30, remainingPercent: 70,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "3p-5h", label: "Claude/GPT · Session (5h)", usedPercent: 60, remainingPercent: 40,
+        resetsAt: "2026-09-04T16:00:00Z" }
+    ], "2026-09-04T11:00:00Z")
+    compare(layout.lead.id, "3p-5h")
+  }
+
+  function test_antigravity_gemini_5h_leads_when_more_constrained() {
+    var layout = layoutOf([
+      { id: "gemini-weekly", label: "Gemini · Weekly (7d)", usedPercent: 20, remainingPercent: 80,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "gemini-5h", label: "Gemini · Session (5h)", usedPercent: 60, remainingPercent: 40,
+        resetsAt: "2026-09-04T16:00:00Z" },
+      { id: "3p-weekly", label: "Claude/GPT · Weekly (7d)", usedPercent: 30, remainingPercent: 70,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "3p-5h", label: "Claude/GPT · Session (5h)", usedPercent: 25, remainingPercent: 75,
+        resetsAt: "2026-09-04T16:00:00Z" }
+    ], "2026-09-04T11:00:00Z")
+    compare(layout.lead.id, "gemini-5h")
+  }
+
+  function test_antigravity_session_windows_preserve_delivered_order_on_tie() {
+    var layout = layoutOf([
+      { id: "gemini-weekly", label: "Gemini · Weekly (7d)", usedPercent: 20, remainingPercent: 80,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "gemini-5h", label: "Gemini · Session (5h)", usedPercent: 25, remainingPercent: 75,
+        resetsAt: "2026-09-04T16:00:00Z" },
+      { id: "3p-weekly", label: "Claude/GPT · Weekly (7d)", usedPercent: 30, remainingPercent: 70,
+        resetsAt: "2026-09-05T12:00:00Z" },
+      { id: "3p-5h", label: "Claude/GPT · Session (5h)", usedPercent: 25, remainingPercent: 75,
+        resetsAt: "2026-09-04T16:00:00Z" }
     ], "2026-09-04T11:00:00Z")
     compare(layout.lead.id, "gemini-5h")
   }

@@ -83,9 +83,10 @@ not literal UI.
   belongs to a non-critical session window. Every level carries a word; no level is
   colour-only.
 - `UX-020D` (amended 2026-09-04): The popup renders exactly one lead
-  window, elected deterministically: a session window (window id `session`
-  or `gemini-5h`) leads whenever present, the first delivered one if
-  several; otherwise a critical window wins, and among criticals the one
+  window, elected deterministically: a session window (window id `session`,
+  `gemini-5h`, `3p-5h`, or `claude-5h`) leads whenever present, the one
+  with the lowest remaining percentage if several (preserving delivered
+  order on tie); otherwise a critical window wins, and among criticals the one
   with the lowest remaining percentage; otherwise a plan window (window id
   starting `plan-`) wins, and among plan windows the one with the lowest
   remaining percentage; otherwise the window whose reset comes soonest; ties
