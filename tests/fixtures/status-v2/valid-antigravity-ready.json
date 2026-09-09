@@ -17,17 +17,31 @@
       "windows": [
         {
           "id": "gemini-weekly",
-          "label": "Weekly (7d)",
+          "label": "Gemini · Weekly (7d)",
           "usedPercent": 14.0,
           "remainingPercent": 86.0,
           "resetsAt": "2026-08-27T16:18:13Z"
         },
         {
           "id": "gemini-5h",
-          "label": "Session (5h)",
+          "label": "Gemini · Session (5h)",
           "usedPercent": 8.0,
           "remainingPercent": 92.0,
           "resetsAt": "2026-08-21T22:09:26Z"
+        },
+        {
+          "id": "3p-weekly",
+          "label": "Claude/GPT · Weekly (7d)",
+          "usedPercent": 0.0,
+          "remainingPercent": 100.0,
+          "resetsAt": "2026-08-29T23:25:14Z"
+        },
+        {
+          "id": "3p-5h",
+          "label": "Claude/GPT · Session (5h)",
+          "usedPercent": 0.0,
+          "remainingPercent": 100.0,
+          "resetsAt": "2026-08-23T04:25:14Z"
         }
       ],
       "lastSuccessAt": "2026-08-21T12:00:00Z",

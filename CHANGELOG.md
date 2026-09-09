@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- feat: Antigravity visualizes Claude and GPT third-party models alongside
+  Gemini, mapping both families into four disambiguated quota windows (Gemini
+  Weekly, Gemini Session, Claude/GPT Weekly, Claude/GPT Session). When multiple
+  session windows exist, the most constrained window leads the bar chip.
 - feat: Antigravity usage and quota support via
   `agy --print /usage --output-format json`, reading the `gemini-weekly` and
   `gemini-5h` buckets by id into percentage windows. Disabled by default —
